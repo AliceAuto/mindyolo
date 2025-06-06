@@ -63,7 +63,7 @@ def set_default_infer(args):
     if args.ms_mode == 0:
         ms.set_context(jit_config={"jit_level": "O2"})
     if args.device_target == "Ascend":
-        ms.set_device("Ascend", int(os.getenv("DEVICE_ID", 0)))
+        ms.set_device("CPU", int(os.getenv("DEVICE_ID", 0)))
     args.rank, args.rank_size = 0, 1
     # Set Data
     args.data.nc = 1 if args.single_cls else int(args.data.nc)  # number of classes

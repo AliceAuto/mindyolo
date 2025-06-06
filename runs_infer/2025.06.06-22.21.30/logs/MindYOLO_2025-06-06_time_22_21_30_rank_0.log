@@ -1,0 +1,8 @@
+2025-06-06 22:21:31,006 [WARNING] Parse Model, args: nearest, keep str type
+2025-06-06 22:21:31,029 [WARNING] Parse Model, args: nearest, keep str type
+2025-06-06 22:21:31,098 [INFO] number of network params, total: 7.254436M, trainable: 7.235389M
+2025-06-06 22:21:31,249 [INFO] Load checkpoint from [pre_models/yolov5s/yolov5s_300e_mAP376-860bcf3b.ckpt] success.
+2025-06-06 22:21:37,208 [INFO] Predict result is: {'category_id': [1, 1, 1, 1, 1, 1, 72, 31, 1], 'bbox': [[232.734, 105.094, 17.344, 55.078], [12.202, 96.539, 24.36, 70.547], [167.109, 91.324, 10.547, 27.832], [95.449, 89.859, 16.055, 40.195], [188.086, 98.121, 13.828, 41.191], [80.039, 87.75, 6.914, 19.922], [149.062, 64.957, 13.594, 12.305], [91.699, 114.938, 7.852, 12.891], [74.766, 87.516, 5.391, 15.0]], 'score': [0.84229, 0.84033, 0.77148, 0.72852, 0.69092, 0.5791, 0.30957, 0.28101, 0.27393]}
+2025-06-06 22:21:37,210 [INFO] Speed: 5941.3/2.3/5943.6 ms inference/NMS/total per 640x640 image at batch-size 1;
+2025-06-06 22:21:37,210 [INFO] Detect a image success.
+2025-06-06 22:21:37,213 [INFO] Infer completed.
