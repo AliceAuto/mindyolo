@@ -19,75 +19,70 @@ from mindyolo.utils.config import parse_args
 from mindyolo.utils.metrics import non_max_suppression, scale_coords, xyxy2xywh, process_mask_upsample, scale_image
 from mindyolo.utils.utils import draw_result, set_seed
 def get_parser_infer(parents=None):
-    # 创建用于推理任务的参数解析器
-    parser = argparse.ArgumentParser(description="Infer", parents=[parents] if parents else [])
+    import argparse
+    import ast
 
-    # 推理任务类型：检测（detect）或分割（segment）
-    parser.add_argument("--task", type=str, default="detect", choices=["detect", "segment"])
+    parser = argparse.ArgumentParser(description="推理任务参数", parents=[parents] if parents else [])
 
-    # 指定使用的设备：Ascend、GPU 或 CPU
-    parser.add_argument("--device_target", type=str, default="Ascend", help="device target, Ascend/GPU/CPU")
+    parser.add_argument("--task", type=str, default="detect", choices=["detect", "segment"],
+                        help="推理任务类型：detect=检测，segment=分割")
 
-    # MindSpore 执行模式：0 表示图模式，1 表示动态图（pynative）
-    parser.add_argument("--ms_mode", type=int, default=0, help="train mode, graph/pynative")
+    parser.add_argument("--device_target", type=str, default="Ascend",
+                        help="设备选择：Ascend、GPU 或 CPU")
 
-    # 自动混合精度等级：O0 不使用，O1、O2 分别为不同级别的混合精度训练
-    parser.add_argument("--ms_amp_level", type=str, default="O0", help="amp level, O0/O1/O2")
+    parser.add_argument("--ms_mode", type=int, default=0,
+                        help="MindSpore执行模式：0=图模式，1=动态图（pynative）")
 
-    # 是否启用图算融合（Graph Kernel）
-    parser.add_argument(
-        "--ms_enable_graph_kernel", type=ast.literal_eval, default=False, help="use enable_graph_kernel or not"
-    )
+    parser.add_argument("--ms_amp_level", type=str, default="O0",
+                        help="自动混合精度等级：O0=不使用，O1/O2=混合精度等级")
 
-    # 精度模式设置，用于 Ascend
-    parser.add_argument(
-        "--precision_mode", type=str, default=None, help="set accuracy mode of network model"
-    )
+    parser.add_argument("--ms_enable_graph_kernel", type=ast.literal_eval, default=False,
+                        help="是否启用图算融合（Graph Kernel）")
 
-    # 权重文件路径
-    parser.add_argument("--weight", type=str, default="yolov7_300.ckpt", help="model.ckpt path(s)")
+    parser.add_argument("--precision_mode", type=str, default=None,
+                        help="精度模式设置（用于Ascend设备）")
 
-    # 输入图片尺寸（正方形）
-    parser.add_argument("--img_size", type=int, default=640, help="inference size (pixels)")
+    parser.add_argument("--weight", type=str, default="yolov7_300.ckpt",
+                        help="权重文件路径（model.ckpt）")
 
-    # 是否将多类别数据视为单类别
-    parser.add_argument(
-        "--single_cls", type=ast.literal_eval, default=False, help="train multi-class data as single-class"
-    )
+    parser.add_argument("--img_size", type=int, default=640,
+                        help="输入图片尺寸（正方形边长，单位像素）")
 
-    # 是否执行非极大值抑制（NMS）
-    parser.add_argument("--exec_nms", type=ast.literal_eval, default=True, help="whether to execute NMS or not")
+    parser.add_argument("--single_cls", type=ast.literal_eval, default=False,
+                        help="是否将多类别数据视为单类别")
 
-    # NMS的时间限制（秒）
-    parser.add_argument("--nms_time_limit", type=float, default=60.0, help="time limit for NMS")
+    parser.add_argument("--exec_nms", type=ast.literal_eval, default=True,
+                        help="是否执行非极大值抑制（NMS）")
 
-    # 置信度阈值（低于该值的框会被过滤掉）
-    parser.add_argument("--conf_thres", type=float, default=0.25, help="object confidence threshold")
+    parser.add_argument("--nms_time_limit", type=float, default=60.0,
+                        help="NMS的时间限制（秒）")
 
-    # NMS的 IOU 阈值
-    parser.add_argument("--iou_thres", type=float, default=0.65, help="IOU threshold for NMS")
+    parser.add_argument("--conf_thres", type=float, default=0.25,
+                        help="置信度阈值（低于该值的框会被过滤）")
 
-    # 是否从预测结果中独立剥离 conf 值
-    parser.add_argument(
-        "--conf_free", type=ast.literal_eval, default=False, help="Whether the prediction result include conf"
-    )
+    parser.add_argument("--iou_thres", type=float, default=0.65,
+                        help="NMS的IOU阈值")
 
-    # 随机种子设置，用于复现
-    parser.add_argument("--seed", type=int, default=2, help="set global seed")
+    parser.add_argument("--conf_free", type=ast.literal_eval, default=False,
+                        help="是否从预测结果中独立剥离置信度值")
 
-    # 日志等级（INFO、DEBUG 等）
-    parser.add_argument("--log_level", type=str, default="INFO", help="save dir")
+    parser.add_argument("--seed", type=int, default=2,
+                        help="随机种子（用于结果复现）")
 
-    # 推理结果保存目录
-    parser.add_argument("--save_dir", type=str, default="./runs_infer", help="save dir")
+    parser.add_argument("--log_level", type=str, default="INFO",
+                        help="日志等级，如INFO、DEBUG等")
 
-    # 输入图片路径
-    parser.add_argument("--image_path", type=str, help="path to image")
+    parser.add_argument("--save_dir", type=str, default="./runs_infer",
+                        help="推理结果保存目录")
 
-    # 是否保存推理结果
-    parser.add_argument("--save_result", type=ast.literal_eval, default=True, help="whether save the inference result")
+    parser.add_argument("--image_path", type=str,
+                        help="输入图片路径")
+
+    parser.add_argument("--save_result", type=ast.literal_eval, default=True,
+                        help="是否保存推理结果")
 
     return parser
+
 
 
 def set_default_infer(args):
