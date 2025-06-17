@@ -4,7 +4,7 @@ ms_mode: 0
 ms_amp_level: O3
 ms_enable_graph_kernel: false
 precision_mode: null
-weight: pre_models/yolov5s/yolov5s_300e_mAP376-860bcf3b.ckpt
+weight: weights\yolov5\yolov5s.ckpt
 img_size: 640
 single_cls: false
 exec_nms: true
@@ -14,8 +14,8 @@ iou_thres: 0.65
 conf_free: false
 seed: 2
 log_level: INFO
-save_dir: ./runs_infer\2025.06.06-22.21.30
-image_path: test_by_yolov5s/images/images.jpg
+save_dir: ./runs_infer\2025.06.17-21.11.36
+image_path: test_by_yolov5s\images\images.jpg
 save_result: true
 data: !!python/object/new:mindyolo.utils.config.Config
   state:
@@ -380,6 +380,6 @@ network: !!python/object/new:mindyolo.utils.config.Config
     anchors: *id005
     backbone: *id006
     head: *id007
-config: ./configs/yolov5/yolov5s.yaml
+config: configs\yolov5\yolov5s.yaml
 rank: 0
 rank_size: 1
