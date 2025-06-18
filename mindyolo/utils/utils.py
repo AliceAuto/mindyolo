@@ -12,7 +12,6 @@ from mindspore import ParallelMode
 
 from mindyolo.utils import logger
 
-
 def set_seed(seed=2):
     np.random.seed(seed)
     random.seed(seed)
@@ -141,11 +140,19 @@ def freeze_layers(network, freeze=[]):
 def draw_result(img_path, result_dict, data_names, is_coco_dataset=True, save_path="./detect_results"):
     import random
     import cv2
+    import time  # Add missing import
     from mindyolo.data import COCO80_TO_COCO91_CLASS
 
     os.makedirs(save_path, exist_ok=True)
-    save_result_path = os.path.join(save_path, img_path.split("/")[-1])
-    im = cv2.imread(img_path)
+    # Handle numpy array input
+    if isinstance(img_path, np.ndarray):
+        im = img_path.copy()
+        save_name = f"result_{int(time.time())}.jpg"  # Now time is available
+    else:
+        im = cv2.imread(img_path)
+        save_name = img_path.split("/")[-1] if "/" in img_path else img_path.split("\\")[-1]
+    
+    save_result_path = os.path.join(save_path, save_name)
     category_id, bbox, score = result_dict["category_id"], result_dict["bbox"], result_dict["score"]
     seg = result_dict.get("segmentation", None)
     mask = None if seg is None else np.zeros_like(im, dtype=np.float32)
@@ -175,6 +182,8 @@ def draw_result(img_path, result_dict, data_names, is_coco_dataset=True, save_pa
     if seg:
         im = (0.7 * im + 0.3 * mask).astype(np.uint8)
     cv2.imwrite(save_result_path, im)
+    
+    return im  # Add return statement
 
 
 def get_broadcast_datetime(rank_size=1, root_rank=0):
