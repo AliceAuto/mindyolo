@@ -1,0 +1,5 @@
+#直播推理
+python demo/realtime_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --log_level WARNING
+
+#图片推理
+python demo/predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --image_path test_by_yolov5s\images\images.jpg --log_level WARNING 
