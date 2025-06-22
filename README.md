@@ -1,5 +1,12 @@
-# MindYOLO
+# 人流统计系统
+## 图片与视频流推理的核心结构
+![alt text](icons/highlight.png)
 
+## 模型训练功能结构
+...敬请期待
+---
+
+## MindYOLO 官方资料
 <p align="left">
     <a href="https://github.com/mindspore-lab/mindyolo/blob/master/README.md">
         <img alt="docs" src="https://img.shields.io/badge/docs-latest-blue">
@@ -26,11 +33,11 @@ The following is the corresponding `mindyolo` versions and supported `mindspore`
 
 <img src="https://raw.githubusercontent.com/mindspore-lab/mindyolo/master/.github/000000137950.jpg" />
 
-## Benchmark and Model Zoo
+### Benchmark and Model Zoo
 
 See [Benchmark Results](benchmark_results.md).
 
-## supported model list
+### supported model list
 - [x] [YOLOv11](configs/yolov11)
 - [x] [YOLOv10](configs/yolov10)
 - [x] [YOLOv9](configs/yolov9)
@@ -41,38 +48,38 @@ See [Benchmark Results](benchmark_results.md).
 - [x] [YOLOv4](configs/yolov4)
 - [x] [YOLOv3](configs/yolov3)
 
-## Installation
+### Installation
 
 See [INSTALLATION](docs/en/installation.md) for details.
 
-## Getting Started
+### Getting Started
 
 See [GETTING STARTED](GETTING_STARTED.md) for details.
 
-## Custom dataset examples
+### Custom dataset examples
 
 See [examples](examples)
 
-## Notes
+### Notes
 
 ⚠️ The current version is based on the [static shape of GRAPH](https://mindspore.cn/docs/en/r2.0/note/static_graph_syntax_support.html). 
 The dynamic shape of verision will be supported later. Please look forward to it.
 
-### How to Contribute
+#### How to Contribute
 
 We appreciate all contributions including issues and PRs to make MindYOLO better. 
 
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for the contributing guideline.
 
-### License
+#### License
 
 MindYOLO is released under the [Apache License 2.0](LICENSE.md).
 
-### Acknowledgement
+#### Acknowledgement
 
 MindYOLO is an open source project that welcome any contribution and feedback. We wish that the toolbox and benchmark could support the growing research community, reimplement existing methods, and develop their own new real-time object detection methods by providing a flexible and standardized toolkit.
 
-### Citation
+#### Citation
 
 If you find this project useful in your research, please consider cite:
 
