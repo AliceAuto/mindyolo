@@ -1,6 +1,11 @@
 # 使用官方 Ubuntu 镜像
 FROM ubuntu:22.04
 
+
+# 设置默认 RTSP 地址
+ENV RTSP_STREAM_URL="rtsp://localhost:8554/stream"
+
+
 # 设置APT镜像源为清华，并安装基础依赖
 RUN sed -i 's@http://.*archive.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g' /etc/apt/sources.list && \
     cat /etc/apt/sources.list && \
@@ -23,7 +28,7 @@ RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && 
     pip install --upgrade pip && \
     ( \
         echo "尝试安装 GPU 版本..." && \
-        pip install mindspore-gpu==2.4.0 && \
+        pip install mindspore-gpu==2.5.0 && \
         python3 -c "import mindspore; mindspore.run_check()" \
     ) || ( \
         echo "GPU 环境不可用，切换 CPU 版本" && \
@@ -42,6 +47,7 @@ CMD ["python", "demo/realtime_predict.py", \
     "--weight", "weights/yolov5/yolov5s.ckpt", \
     "--config", "configs/yolov5/yolov5s.yaml", \
     "--device_target", "GPU", \
+    "--camera_index", "${RTSP_STREAM_URL}", \
     "--frame_size", "1280", "720", \
     "--show_fps", "True", \
     "--save_result", "False"]

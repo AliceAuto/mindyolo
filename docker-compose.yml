@@ -1,0 +1,29 @@
+
+
+services:
+  mindyolo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app  # 挂载当前目录方便开发
+    environment:
+      - PYTHONUNBUFFERED=1
+    # 如果使用GPU需要取消下面注释
+    # runtime: nvidia
+    # devices:
+    #   - "/dev/nvidia0:/dev/nvidia0"
+    ports:
+      - "1935:1935"  # RTMP协议默认端口
+      - "8554:8554"  # 保留原有RTSP端口
+    command: [
+      "python", "demo/realtime_predict.py",
+      "--task", "detect",
+      "--weight", "weights/yolov5/yolov5s.ckpt",
+      "--config", "configs/yolov5/yolov5s.yaml",
+      "--device_target", "GPU",
+      "--camera_index", "rtmp://localhost:1935/live/test",  # 修改推流地址
+      "--frame_size", "1280", "720",
+      "--show_fps", "True",
+      "--save_result", "False"
+    ]
