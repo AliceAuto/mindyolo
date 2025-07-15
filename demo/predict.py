@@ -79,7 +79,7 @@ def get_parser_infer(parents=None):
     parser.add_argument("--image_path", type=str,
                         help="输入图片路径")
 
-    parser.add_argument("--save_result", type=ast.literal_eval, default=True,
+    parser.add_argument("--save_result", type=ast.literal_eval, default=False,
                         help="是否保存推理结果")
 
     parser.add_argument("--log_file", type=str, default="infer.log",

@@ -30,8 +30,8 @@ def get_parser_realtime(parents=None):
     parser.add_argument('--mode', type=str, default='live', choices=['video', 'image', 'live'], help='推理模式: 视频(video)、图片(image)或直播(live)。视频模式需指定--video_path，图片模式需指定--image_path')
     parser.add_argument('--video_path', type=str, default=None, help='Path to input video file')
     parser.add_argument('--output_video', type=str, default=None, help='Path to output video file')
-    parser.add_argument('--save_frames', type=bool, default=False, help='是否保存生成的帧图片（以result_xxx命名）')
     parser.add_argument('--pad_if_mismatch', type=bool, default=False, help='当尺寸不匹配时，是否对原图像进行填充推理后再剪裁复原')
+    parser.add_argument('--save_frames', type=bool, default=False, help='是否保存推理结果帧')
     parser.add_argument('--camera_index', type=str, default='0', help='摄像头索引或视频流URL')
     return parser
 
@@ -188,7 +188,10 @@ def realtime_infer(args):
     for codec in codecs:
         try:
             fourcc = cv2.VideoWriter_fourcc(*codec)
-            video_writer = cv2.VideoWriter(args.output_video, fourcc, fps, (args.frame_size[0], args.frame_size[1]))
+            # 获取原始视频尺寸
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            video_writer = cv2.VideoWriter(args.output_video, fourcc, fps, (width, height))
             if video_writer.isOpened():
                 logger.info(f"使用{codec}编码创建视频写入器成功")
                 break
@@ -264,10 +267,8 @@ def realtime_infer(args):
                 # 转换RGBA为BGR格式
                 if processed_frame.shape[2] == 4:
                     processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
-                # 检查帧大小是否匹配视频写入器设置
-                if processed_frame.shape[1] != args.frame_size[0] or processed_frame.shape[0] != args.frame_size[1]:
-                    logger.warning(f"帧大小不匹配，调整为视频写入器大小: {args.frame_size}")
-                    processed_frame = cv2.resize(processed_frame, tuple(args.frame_size))
+                # 使用原始视频尺寸写入，无需调整
+                pass
                 success = video_writer.write(processed_frame)
                 if not success:
                     logger.error(f"写入第 {frame_count} 帧到视频文件失败")
