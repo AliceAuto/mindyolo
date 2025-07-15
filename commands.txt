@@ -12,6 +12,8 @@ python demo/video_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt 
 python deploy\mslite_predict.py --mindir_path ./yolov5s.mindir --image_path test_by_yolov5s\images\images.jpg --img_size 640 --conf_thres 0.3
 
 
+#视频推理
+python demo/realtime_predict.py --mode video --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --device_target GPU --show_fps True --save_result False --video_path test_by_yolov5s\videos\test.mp4 --output_video test_by_yolov5s\videos\output.mp4 --task detect 
 
 
-python demo/realtime_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --device_target GPU --frame_size 1280 720 --show_fps True --save_result False --camera_index "rtmp://localhost:1935/live/test?buffer_size=1024&timeout=10"  
+python demo/realtime_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --device_target GPU --frame_size 1280 720 --show_fps True --save_result False --camera_index "rtmp://localhost:1935/live/test?buffer_size=1024&timeout=10"
