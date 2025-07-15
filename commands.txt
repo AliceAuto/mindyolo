@@ -6,7 +6,7 @@ python demo/predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --conf
 
 
 # 实时检测命令
-python demo/realtime_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --device_target GPU --frame_size 1280 720 --show_fps True --save_result False --camera_index 1
+python demo/realtime_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --device_target GPU --frame_size 1280 720 --show_fps True --save_result False --camera_index 0
 python demo/video_predict.py --task detect --weight weights/yolov5/yolov5s.ckpt --config configs/yolov5/yolov5s.yaml --video_path test_by_yolov5s\videos\test.mp4 --output_path output.mp4
 
 python deploy\mslite_predict.py --mindir_path ./yolov5s.mindir --image_path test_by_yolov5s\images\images.jpg --img_size 640 --conf_thres 0.3
