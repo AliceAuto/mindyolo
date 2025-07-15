@@ -1,0 +1,9 @@
+2025-07-15 17:45:56,354 [INFO] 
+2025-07-15 17:45:56,361 [INFO] Please check the above information for the configurations
+2025-07-15 17:45:56,462 [WARNING] Parse Model, args: nearest, keep str type
+2025-07-15 17:45:56,484 [WARNING] Parse Model, args: nearest, keep str type
+2025-07-15 17:45:56,570 [INFO] number of network params, total: 6.243601M, trainable: 6.228762M
+2025-07-15 17:45:56,722 [WARNING] Parse Model, args: nearest, keep str type
+2025-07-15 17:45:56,746 [WARNING] Parse Model, args: nearest, keep str type
+2025-07-15 17:45:56,826 [INFO] number of network params, total: 6.243601M, trainable: 6.228762M
+2025-07-15 17:45:57,249 [INFO] ema_weight not exist, default pretrain weight is currently used.
