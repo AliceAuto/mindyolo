@@ -193,8 +193,11 @@ def realtime_infer(args):
             if writer is None and args.output_video:
                 # 创建输出目录（如果不存在）
                 os.makedirs(os.path.dirname(args.output_video), exist_ok=True)
+                # 获取视频FPS
+                fps = source.get(cv2.CAP_PROP_FPS) if hasattr(source, 'get') else 30.0
+                fps = fps if fps > 0 else 30.0
                 # 交换宽度和高度以匹配VideoWriter要求的格式 (width, height)
-                writer = create_video_writer(args, (frame.shape[1], frame.shape[0]))
+                writer = create_video_writer(args, (frame.shape[1], frame.shape[0]), fps)
                 
             # Process frame first to get dimensions
             processed_frame, _ = engine.process_frame(frame)

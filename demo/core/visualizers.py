@@ -1,6 +1,7 @@
 """Visualization implementations."""
 import cv2
 import numpy as np
+import sys
 from typing import List, Dict, Any
 
 from .interfaces import Visualizer, InferenceResult
@@ -24,6 +25,9 @@ class DetectionVisualizer(Visualizer):
         
     def draw(self, image: np.ndarray, result: InferenceResult, class_names: List[str], **kwargs) -> np.ndarray:
         """Draw detection results on image."""
+        if result is None:
+            print("Warning: No detection results to visualize.", file=sys.stderr, flush=True)
+            return image.copy()
         img = image.copy()
         
         for bbox, score, class_id in zip(result.bboxes, result.scores, result.category_ids):
@@ -67,6 +71,9 @@ class SegmentationVisualizer(Visualizer):
         
     def draw(self, image: np.ndarray, result: InferenceResult, class_names: List[str], **kwargs) -> np.ndarray:
         """Draw segmentation results on image."""
+        if result is None:
+            print("Warning: No detection results to visualize.", file=sys.stderr, flush=True)
+            return image.copy()
         img = image.copy()
         
         if result.masks is None:

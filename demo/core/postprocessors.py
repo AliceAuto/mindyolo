@@ -9,6 +9,7 @@ from mindyolo.utils.metrics import (
     xyxy2xywh,
     process_mask_upsample
 )
+import sys
 
 class DetectionPostProcessor(PostProcessor):
     """Post-processor for object detection."""
@@ -79,9 +80,23 @@ class SegmentationPostProcessor(DetectionPostProcessor):
         processed_shape = metadata["processed_shape"][1:]  # CHW -> HW
         
         # Split detection and mask outputs
-        output, (_, _, proto) = model_output
+        print("Entering postprocessor process method", file=sys.stderr, flush=True)
+        if model_output is None:
+            print("Error: model_output is None. Check model inference and input data.", file=sys.stderr, flush=True)
+            return None
+        print(f"model_output type before unpacking: {type(model_output)}, value: {model_output}", file=sys.stderr, flush=True)
+        # Handle case where mask proto is missing
+        if len(model_output) < 2 or model_output[1] is None:
+            print("Warning: Mask proto output is missing. Running in detection-only mode.", file=sys.stderr, flush=True)
+            return None
+        try:
+            output, (_, _, proto) = model_output
+        except TypeError as e:
+            print(f"Error unpacking model_output: {e}")
+            print(f"model_output type: {type(model_output)}, value: {model_output}")
+            return None
         det_out = output.asnumpy()
-        proto = proto.asnumpy()
+        proto = proto.asnumpy().squeeze(0)  # 移除批量维度
 
         # Get number of classes
         nc = kwargs.get("num_classes", 80)
@@ -89,13 +104,12 @@ class SegmentationPostProcessor(DetectionPostProcessor):
         # Apply NMS
         bboxes, mask_coeffs = det_out[..., :nc+5], det_out[..., nc+5:]
         nms_out = non_max_suppression(
-            bboxes,
-            mask_coeffs,
-            conf_thres=self.conf_thres,
-            iou_thres=self.iou_thres,
-            classes=self.classes,
-            max_det=self.max_det
-        )
+                bboxes,
+                mask_coeffs,
+                conf_thres=self.conf_thres,
+                iou_thres=self.iou_thres,
+                classes=self.classes
+            )
 
         result = InferenceResult(
             category_ids=[],
