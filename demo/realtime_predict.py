@@ -51,7 +51,7 @@ class InferenceEngine:
     def __init__(self, args):
         self.args = args
         self.model = self._create_model()
-        self.preprocessor = PreProcessorChain(640, 32)
+        self.preprocessor = PreProcessorChain(640, 32, interpolation=args.interpolation)
         self.postprocessor = PostProcessorFactory.create_processor(
             args.task,
             conf_thres=args.conf_thres,

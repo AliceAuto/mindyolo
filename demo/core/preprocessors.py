@@ -7,9 +7,10 @@ from .interfaces import PreProcessor
 
 class ResizePreProcessor(PreProcessor):
     """Resize images to target size."""
-    def __init__(self, target_size: int, keep_ratio: bool = True):
+    def __init__(self, target_size: int, keep_ratio: bool = True, interpolation: str = 'default'):
         self.target_size = target_size
         self.keep_ratio = keep_ratio
+        self.interpolation = interpolation
         self._next: Optional[PreProcessor] = None
 
     def set_next(self, processor: PreProcessor) -> PreProcessor:
@@ -24,6 +25,9 @@ class ResizePreProcessor(PreProcessor):
         if self.keep_ratio:
             r = self.target_size / max(h_ori, w_ori)
             if r != 1:
+                if self.interpolation == 'nearest':
+                    interp = cv2.INTER_NEAREST
+            else:
                 interp = cv2.INTER_AREA if r < 1 else cv2.INTER_LINEAR
                 image = cv2.resize(image, (int(w_ori * r), int(h_ori * r)), interpolation=interp)
         else:
@@ -75,9 +79,9 @@ class ColorTransformPreProcessor(PreProcessor):
 
 class PreProcessorChain:
     """Chain of preprocessors for image processing."""
-    def __init__(self, target_size: int = 640, stride: int = 32):
+    def __init__(self, target_size: int = 640, stride: int = 32, interpolation: str = 'default'):
         # Create processors
-        self.resize = ResizePreProcessor(target_size)
+        self.resize = ResizePreProcessor(target_size, interpolation=interpolation)
         self.pad = PadPreProcessor(stride)
         self.color = ColorTransformPreProcessor()
         

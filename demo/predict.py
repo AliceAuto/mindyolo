@@ -49,6 +49,9 @@ def get_parser_infer(parents=None):
     parser.add_argument("--img_size", type=int, default=640,
                         help="输入图片尺寸（正方形边长，单位像素）")
 
+    parser.add_argument("--interpolation", type=str, default='default', choices=['default', 'nearest'],
+                        help="插值方法: 'default' (默认) 或 'nearest' (最近邻)")
+
     parser.add_argument("--single_cls", type=ast.literal_eval, default=False,
                         help="是否将多类别数据视为单类别")
 
